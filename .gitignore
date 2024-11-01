@@ -1,0 +1,15 @@
+# Node.js
+client/node_modules
+
+# Angular cache
+client/.angular
+
+# Логи
+*.log
+
+# Сборки
+dist/
+build/
+
+# Файлы окружения
+.env

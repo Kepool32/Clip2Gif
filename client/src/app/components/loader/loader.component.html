@@ -1,0 +1,7 @@
+<div *ngIf="loading" class="loader-container">
+  <div class="spinner"></div>
+  <span *ngIf="countdown > 0"
+    >Подготовка к конвертации... {{ countdown }} секунд</span
+  >
+  <span *ngIf="countdown === 0">Конвертация в процессе...</span>
+</div>

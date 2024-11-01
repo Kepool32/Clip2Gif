@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./
+    ports:
+      - '3000:3000'
+    deploy:
+      replicas: 1
+    command: ['node', 'app.js']
+    volumes:
+      - uploads:/app/uploads
+      - output:/app/output
+    env_file:
+      - .env.developer
+
+  worker:
+    build:
+      context: ./
+    deploy:
+      replicas: 4
+    command: ['node', 'src/queue/queue.js']
+    volumes:
+      - uploads:/app/uploads
+      - output:/app/output
+    env_file:
+      - .env.developer
+
+  redis:
+    image: redis:alpine
+    hostname: redis
+    ports:
+      - '6380:6379'
+
+volumes:
+  uploads:
+  output:
