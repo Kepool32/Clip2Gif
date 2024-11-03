@@ -14,7 +14,6 @@ export class UploadComponent {
   gifUrl: string | null = null;
   successMessage: string | null = null;
   errorMessage: string | null = null;
-
   validationMessage: string | null = null;
 
   constructor(private conversionService: ConversionService) {}
@@ -25,8 +24,6 @@ export class UploadComponent {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       this.resetSuccessMessage();
-      this.resetFile();
-      this.gifUrl = null;
 
       if (this.isValidFileType(file) && this.isValidFileSize(file)) {
         this.selectedFile = file;
@@ -35,7 +32,6 @@ export class UploadComponent {
 
       } else {
         this.resetFile();
-
         if (!this.isValidFileType(file)) {
           this.validationMessage =
             'Неверный тип файла. Пожалуйста, выберите видео файл.';
