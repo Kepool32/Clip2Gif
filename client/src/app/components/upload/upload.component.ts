@@ -18,27 +18,28 @@ export class UploadComponent {
 
   constructor(private conversionService: ConversionService) {}
 
-  onFileSelected(event: Event) {
+  async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.gifUrl = null;
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      this.resetSuccessMessage();
+      this.resetMessages();
 
       if (this.isValidFileType(file) && this.isValidFileSize(file)) {
-        this.selectedFile = file;
-        this.videoUrl = URL.createObjectURL(this.selectedFile);
-        this.validationMessage = null;
-
+        const isDurationValid = await this.isValidFileDuration(file);
+        if (isDurationValid) {
+          this.selectedFile = file;
+          this.videoUrl = URL.createObjectURL(file);
+          this.validationMessage = null;
+        } else {
+          this.resetFile();
+          this.validationMessage =
+            'Видео слишком длинное. Максимальная длительность: 10 секунд.';
+        }
       } else {
         this.resetFile();
-        if (!this.isValidFileType(file)) {
-          this.validationMessage =
-            'Неверный тип файла. Пожалуйста, выберите видео файл.';
-        } else if (!this.isValidFileSize(file)) {
-          this.validationMessage =
-            'Файл слишком большой. Максимальный размер: 768 КБ.';
-        }
+        this.validationMessage = !this.isValidFileType(file)
+          ? 'Неверный тип файла. Пожалуйста, выберите видео файл.'
+          : 'Файл слишком большой. Максимальный размер: 768 КБ.';
       }
     }
   }
@@ -66,6 +67,7 @@ export class UploadComponent {
       this.gifUrl = URL.createObjectURL(gifBlob);
       this.successMessage = 'Конвертация прошла успешно!';
       this.errorMessage = null;
+      this.videoUrl = null; // Удаляем видео и показываем GIF
       this.resetFile();
     } catch (error) {
       this.errorMessage = 'Ошибка во время конвертации: ' + error;
@@ -75,7 +77,7 @@ export class UploadComponent {
     }
   }
 
-  private resetSuccessMessage() {
+  private resetMessages() {
     this.successMessage = null;
     this.errorMessage = null;
   }
@@ -91,5 +93,17 @@ export class UploadComponent {
 
   private isValidFileSize(file: File): boolean {
     return file.size <= 1024 * 768;
+  }
+  private isValidFileDuration(file: File): Promise<boolean> {
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      video.src = URL.createObjectURL(file);
+
+      video.onloadedmetadata = () => {
+        const isDurationValid = video.duration <= 10;
+        URL.revokeObjectURL(video.src);
+        resolve(isDurationValid);
+      };
+    });
   }
 }

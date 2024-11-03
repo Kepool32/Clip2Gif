@@ -1,5 +1,9 @@
 const multer = require('multer');
 const path = require('path');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('ffmpeg-static');
+
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const upload = multer({
   dest: 'uploads/',
@@ -11,15 +15,26 @@ const upload = multer({
     );
     const mimetype = filetypes.test(file.mimetype);
 
-    console.log(`Uploaded file: ${file.originalname}`);
-    console.log(`File mimetype: ${file.mimetype}`);
+    if (mimetype && extname) {
+      const filePath = path.join(__dirname, '../uploads/', file.filename);
+      ffmpeg.ffprobe(filePath, (err, metadata) => {
+        if (err) {
+          console.error('Error getting video metadata:', err);
+          return cb(new Error('Error processing video file.'));
+        }
 
-    if (mimetype || extname) {
-      console.log('File is valid.');
-      return cb(null, true);
+        const duration = metadata.format.duration;
+        console.log(`Video duration: ${duration} seconds`);
+
+        if (duration > 10) {
+          return cb(new Error('Video too long. Maximum duration: 10 seconds.'));
+        }
+
+        cb(null, true);
+      });
+    } else {
+      cb(new Error('Error: Video files only!'));
     }
-    console.error('Invalid file type.');
-    cb('Error: Video files only!');
   },
 });
 

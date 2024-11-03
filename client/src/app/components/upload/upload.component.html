@@ -27,10 +27,8 @@
     <video [src]="videoUrl" controls></video>
   </div>
 
-  <!-- Компонент загрузки -->
   <app-loader [loading]="loading" [countdown]="countdown"></app-loader>
 
-  <!-- Компонент результата GIF -->
   <app-gif-result
     [gifUrl]="gifUrl"
     [successMessage]="successMessage"
