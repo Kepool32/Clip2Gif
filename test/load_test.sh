@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="http://localhost:3000/api/convert"
+URL="http://localhost:3001/api/convert"
 VIDEO_FILE="test.mp4"
 TOTAL_REQUESTS=100
 CONCURRENT_REQUESTS=10

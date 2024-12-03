@@ -4,7 +4,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 const convertVideoToGif = (inputFile) => {
   return new Promise((resolve, reject) => {
-    // Проверка, существует ли файл
+
     if (!fs.existsSync(inputFile)) {
       return reject(new Error(`Input file does not exist: ${inputFile}`));
     }

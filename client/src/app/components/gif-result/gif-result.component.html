@@ -1,4 +1,4 @@
-<div *ngIf="!errorMessage && gifUrl" class="gif-result">
+<div [ngIf]="!errorMessage && gifUrl" class="gif-result">
   <h3>Конвертированный GIF</h3>
   <img [src]="gifUrl" alt="Converted GIF" />
   <a [href]="gifUrl" download="converted.gif">
@@ -7,8 +7,8 @@
 </div>
 
 <div>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  <div *ngIf="isSuccessMessageVisible()" class="success-message">
+  <div [ngIf]="errorMessage" class="error-message">{{ errorMessage }}</div>
+  <div [ngIf]="isSuccessMessageVisible()" class="success-message">
     {{ successMessage }}
   </div>
 </div>

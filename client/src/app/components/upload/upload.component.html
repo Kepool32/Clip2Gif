@@ -22,7 +22,7 @@
 
   <app-validation [validationMessage]="validationMessage"></app-validation>
 
-  <div *ngIf="selectedFile && videoUrl" class="video-preview">
+  <div [ngIf]="selectedFile && videoUrl" class="video-preview">
     <h3>Предпросмотр видео</h3>
     <video [src]="videoUrl" controls></video>
   </div>
