@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   api:
-    build:
-      context: ./
+    image: my_stack_api
     ports:
       - '3000:3000'
     deploy:
@@ -16,8 +15,7 @@ services:
       - .env.developer
 
   worker:
-    build:
-      context: ./
+    image: my_stack_worker  # Укажите имя собранного образа
     deploy:
       replicas: 4
     command: ['node', 'src/queue/queue.js']
@@ -32,6 +30,9 @@ services:
     hostname: redis
     ports:
       - '6380:6379'
+    environment:
+      - REDIS_PASSWORD=mysecretpassword
+    command: ["redis-server", "--requirepass", "mysecretpassword"]
 
 volumes:
   uploads:

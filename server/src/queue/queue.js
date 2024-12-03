@@ -1,15 +1,18 @@
 const Queue = require('bull');
 const { convertVideoToGif } = require('../services/conversionService');
-require('dotenv').config();
+const fsPromises = require('fs').promises;
+const config = require('../../config');
+
 
 const videoQueue = new Queue('video conversion', {
   redis: {
-    host: process.env.REDIS_HOST || '127.0.0.1',
-    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    host: config.redis.host,
+    port: config.redis.port,
+    password: config.redis.password,
   },
   limiter: {
-    max: parseInt(process.env.QUEUE_MAX, 10) || 1000,
-    duration: parseInt(process.env.QUEUE_DURATION, 10) || 60000,
+    max: config.queue.max,
+    duration: config.queue.duration,
   },
 });
 
@@ -25,7 +28,8 @@ videoQueue.process(async (job) => {
 });
 
 videoQueue.on('completed', async (job, outputFile) => {
-  const { res } = job.data;
+  const res = job.data.res;
+
   if (res) {
     res.download(outputFile, async (err) => {
       if (err) {

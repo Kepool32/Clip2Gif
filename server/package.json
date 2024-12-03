@@ -5,6 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start:prod": "NODE_ENV=production node app.js",
+    "start:dev": "NODE_ENV=developer node app.js",
+    "start": "node app.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
