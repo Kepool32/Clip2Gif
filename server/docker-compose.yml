@@ -15,7 +15,7 @@ services:
       - .env.developer
 
   worker:
-    image: my_stack_worker  # Укажите имя собранного образа
+    image: my_stack_worker
     deploy:
       replicas: 4
     command: ['node', 'src/queue/queue.js']

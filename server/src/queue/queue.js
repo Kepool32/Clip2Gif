@@ -18,23 +18,16 @@ const videoQueue = new Queue('video conversion', {
 
 videoQueue.process(async (job) => {
   const { filePath } = job.data;
-
+  let res
   try {
     const outputFile = await convertVideoToGif(filePath);
-    return outputFile;
-  } catch (error) {
-    throw new Error(`Failed to convert video: ${error.message}`);
-  }
-});
 
-videoQueue.on('completed', async (job, outputFile) => {
-  const res = job.data.res;
 
-  if (res) {
     res.download(outputFile, async (err) => {
       if (err) {
         return res.status(500).send('Error downloading the file.');
       }
+
 
       try {
         await fsPromises.unlink(outputFile);
@@ -43,6 +36,8 @@ videoQueue.on('completed', async (job, outputFile) => {
         console.error('Error deleting output file:', unlinkErr);
       }
     });
+  } catch (error) {
+    throw new Error(`Failed to convert video: ${error.message}`);
   }
 });
 

@@ -27,4 +27,24 @@ export class ConversionService {
       throw new Error('Ошибка при конвертации видео. Попробуйте снова.');
     }
   }
+
+  isValidFileType(file: File): boolean {
+    return file.type.startsWith('video/');
+  }
+
+  isValidFileSize(file: File): boolean {
+    return file.size <= 1024 * 768; // 768 KB
+  }
+
+  isValidFileDuration(file: File): Promise<boolean> {
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      video.src = URL.createObjectURL(file);
+      video.onloadedmetadata = () => {
+        const isDurationValid = video.duration <= 10; // 10 seconds
+        URL.revokeObjectURL(video.src);
+        resolve(isDurationValid);
+      };
+    });
+  }
 }

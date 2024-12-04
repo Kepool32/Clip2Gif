@@ -10,13 +10,13 @@ const convertVideo = async (req, res) => {
   const uploadedFilePath = req.file.path;
 
   try {
-
     if (!fs.existsSync(uploadedFilePath)) {
       return res.status(400).send('Uploaded file does not exist.');
     }
 
-    const job = await videoQueue.add({ filePath: uploadedFilePath });
-
+    const job = await videoQueue.add({
+      filePath: uploadedFilePath
+    });
 
     return res.status(202).send('Video conversion in progress...');
   } catch (error) {
@@ -24,5 +24,6 @@ const convertVideo = async (req, res) => {
     return res.status(500).send('Error adding job to queue.');
   }
 };
+
 
 module.exports = { convertVideo };

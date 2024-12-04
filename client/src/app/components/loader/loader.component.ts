@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./loader.component.css'],
 })
 export class LoaderComponent implements OnInit {
-  @Input() countdown: number = 10;
+  @Input() countdown: number = 1;
   @Input() loading: boolean;
 
   ngOnInit() {

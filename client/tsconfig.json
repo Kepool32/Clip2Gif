@@ -5,6 +5,7 @@
     "sourceMap": true,
     "declaration": false,
     "module": "esnext",
+    "types": ["node"],
     "moduleResolution": "node",
     "target": "es2015",
     "experimentalDecorators": true,
