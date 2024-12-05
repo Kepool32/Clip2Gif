@@ -2,6 +2,7 @@ const Queue = require('bull');
 const { convertVideoToGif } = require('../services/conversionService');
 const fsPromises = require('fs').promises;
 const config = require('../../config');
+const path = require('path');
 
 
 const videoQueue = new Queue('video conversion', {
@@ -16,27 +17,24 @@ const videoQueue = new Queue('video conversion', {
   },
 });
 
+
 videoQueue.process(async (job) => {
-  const { filePath } = job.data;
-  let res
+  const { filePath, jobId } = job.data;
+  console.log(`Processing job ${jobId} with file path: ${filePath}`);
+
   try {
+    // Конвертируем видео в GIF
     const outputFile = await convertVideoToGif(filePath);
+    console.log(`Job ${jobId} completed. GIF saved to: ${outputFile}`);
 
 
-    res.download(outputFile, async (err) => {
-      if (err) {
-        return res.status(500).send('Error downloading the file.');
-      }
+    const outputFilePath = path.join(__dirname, '../../output', `${jobId}.gif`);
+    await fsPromises.rename(outputFile, outputFilePath);
 
 
-      try {
-        await fsPromises.unlink(outputFile);
-        console.log(`Output file deleted: ${outputFile}`);
-      } catch (unlinkErr) {
-        console.error('Error deleting output file:', unlinkErr);
-      }
-    });
+    return { jobId, outputFile: outputFilePath };
   } catch (error) {
+    console.error(`Failed to convert video (job ${jobId}): ${error.message}`);
     throw new Error(`Failed to convert video: ${error.message}`);
   }
 });

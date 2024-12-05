@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'app-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.css'],
+  standalone: true,
 })
 export class LoaderComponent implements OnInit {
   @Input() countdown: number = 1;

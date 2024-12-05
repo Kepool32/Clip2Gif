@@ -4,6 +4,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   selector: 'app-gif-result',
   templateUrl: './gif-result.component.html',
   styleUrls: ['./gif-result.component.css'],
+  standalone: true,
 })
 export class GifResultComponent implements OnChanges {
   @Input() gifUrl: string | ArrayBuffer | null = null;
@@ -13,10 +14,10 @@ export class GifResultComponent implements OnChanges {
   private showSuccessMessage: boolean = false;
 
   ngOnChanges(changes: SimpleChanges) {
-    // Если сообщение об успехе изменилось и не равно null
+
     if (changes['successMessage'] && this.successMessage) {
       this.showSuccessMessage = true;
-      // Устанавливаем таймер на 3 секунды (3000 миллисекунд)
+
       setTimeout(() => {
         this.showSuccessMessage = false;
       }, 3000);

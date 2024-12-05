@@ -10,7 +10,6 @@ const upload = multer({
     const filetypes = /mp4|mov|avi|mkv|webm/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-
     if (extname) {
       cb(null, true);
     } else {
